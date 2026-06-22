@@ -87,44 +87,6 @@ export default function LampScene({ state }: LampSceneProps) {
     wall.receiveShadow = true;
     scene.add(wall);
 
-    // Carrom-board markings: two faint rings under the light pool.
-    const ringMaterial = new THREE.MeshStandardMaterial({ color: 0x2a1a0d, roughness: 0.8 });
-    const outerRing = new THREE.Mesh(
-      new THREE.RingGeometry(0.78, 0.83, 64).rotateX(-Math.PI / 2),
-      ringMaterial
-    );
-    outerRing.position.set(0, 0.002, 0.2);
-    const innerRing = new THREE.Mesh(
-      new THREE.RingGeometry(0.3, 0.33, 64).rotateX(-Math.PI / 2),
-      ringMaterial
-    );
-    innerRing.position.set(0, 0.002, 0.2);
-    scene.add(outerRing, innerRing);
-
-    // A few carrom coins on the board: they catch the light and cast shadows.
-    const coinGeometry = new THREE.CylinderGeometry(0.085, 0.085, 0.028, 32);
-    const coinSpecs: Array<{ color: number; x: number; z: number }> = [
-      { color: 0xd8c49a, x: 0.46, z: 0.58 },
-      { color: 0xd8c49a, x: -0.52, z: 0.06 },
-      { color: 0x241a12, x: 0.16, z: -0.32 },
-      { color: 0x8e2f1f, x: -0.14, z: 0.3 },
-    ];
-    for (const spec of coinSpecs) {
-      const coin = new THREE.Mesh(
-        coinGeometry,
-        new THREE.MeshPhysicalMaterial({
-          color: spec.color,
-          roughness: 0.45,
-          clearcoat: 0.6,
-          clearcoatRoughness: 0.4,
-        })
-      );
-      coin.position.set(spec.x, 0.014, spec.z);
-      coin.castShadow = true;
-      coin.receiveShadow = true;
-      scene.add(coin);
-    }
-
     // --- the lamp ---
     const head = new THREE.Group();
     head.position.set(0, 2.62, 0);

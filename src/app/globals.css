@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #070503;
+  --color-coal: #0e0b08;
+  --color-bone: #ece1cf;
+  --color-bone-dim: #a3947d;
+  --color-lamp: #ffc97c;
+  --color-lamp-bright: #ffe7bd;
+  --color-ember: #d2492f;
+  --color-brass: #b9924c;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-ui: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  /* Screen-space model of the lamp's light cone. Driven by useLampControls. */
+  --beam-x: 50%; /* cone apex (lamp head) */
+  --beam-y: 17%;
+  --beam-sweep: 0deg; /* deviation from straight down */
+  --beam-spread: 30deg; /* half-angle of the cone */
+  --beam-power: 1; /* live lamp intensity (flickers with the bulb) */
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  font-family: var(--font-ui);
+  overflow: hidden;
+}
+
+::selection {
+  background: rgb(255 201 124 / 0.25);
+  color: var(--color-lamp-bright);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-lamp);
+  outline-offset: 3px;
+}
+
+/*
+ * The lamp's light cone, mirrored into the DOM. Content wearing this class is
+ * only visible where the beam actually points: a conic wedge from the lamp
+ * head (angular penumbra) intersected with a radial distance falloff, both
+ * scaled by the live bulb power. Apply to a full-viewport wrapper so the
+ * gradient geometry matches the screen.
+ */
+.light-mask {
+  -webkit-mask-image:
+    conic-gradient(
+      from calc(180deg + var(--beam-sweep) - var(--beam-spread) * 1.5) at var(--beam-x) var(--beam-y),
+      rgb(0 0 0 / 0.02) 0deg,
+      rgb(0 0 0 / calc(0.96 * var(--beam-power))) calc(var(--beam-spread) * 1.05),
+      rgb(0 0 0 / calc(0.96 * var(--beam-power))) calc(var(--beam-spread) * 1.95),
+      rgb(0 0 0 / 0.02) calc(var(--beam-spread) * 3),
+      rgb(0 0 0 / 0.02) 360deg
+    ),
+    radial-gradient(
+      circle 120vmax at var(--beam-x) var(--beam-y),
+      rgb(0 0 0) 0%,
+      rgb(0 0 0) 45%,
+      rgb(0 0 0 / 0.15) 80%
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    conic-gradient(
+      from calc(180deg + var(--beam-sweep) - var(--beam-spread) * 1.5) at var(--beam-x) var(--beam-y),
+      rgb(0 0 0 / 0.02) 0deg,
+      rgb(0 0 0 / calc(0.96 * var(--beam-power))) calc(var(--beam-spread) * 1.05),
+      rgb(0 0 0 / calc(0.96 * var(--beam-power))) calc(var(--beam-spread) * 1.95),
+      rgb(0 0 0 / 0.02) calc(var(--beam-spread) * 3),
+      rgb(0 0 0 / 0.02) 360deg
+    ),
+    radial-gradient(
+      circle 120vmax at var(--beam-x) var(--beam-y),
+      rgb(0 0 0) 0%,
+      rgb(0 0 0) 45%,
+      rgb(0 0 0 / 0.15) 80%
+    );
+  mask-composite: intersect;
+}
+
+.vignette {
+  background: radial-gradient(
+    130% 95% at 50% 42%,
+    transparent 38%,
+    rgb(0 0 0 / 0.5) 76%,
+    rgb(2 1 0 / 0.82) 100%
+  );
+}
+
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+}
+
+/* OUR STORY / YOUR STORY labels: outlined by default, fill when engaged. */
+.story-label {
+  color: rgb(236 225 207 / 0);
+  -webkit-text-stroke: 1px rgb(236 225 207 / 0.85);
+  transition: color 0.3s ease, -webkit-text-stroke-color 0.3s ease;
+}
+.group:hover .story-label,
+a:focus-visible .story-label {
+  color: rgb(236 225 207);
+  -webkit-text-stroke-color: rgb(236 225 207 / 0);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-when-motion {
+    animation: none !important;
+  }
+}

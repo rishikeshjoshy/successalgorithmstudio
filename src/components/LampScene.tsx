@@ -250,7 +250,7 @@ export default function LampScene({ state }: LampSceneProps) {
     coneGroup.position.set(0, -0.36, 0);
     coneGroup.rotation.x = Math.atan2(0.18, 2.98);
     const cone = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.12, 1.5, CONE_HEIGHT, 48, 1, true),
+      new THREE.CylinderGeometry(0.12, 2.1, CONE_HEIGHT, 48, 1, true),
       coneMaterial
     );
     cone.position.y = -CONE_HEIGHT / 2;

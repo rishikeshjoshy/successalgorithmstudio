@@ -72,7 +72,7 @@ export const BEAM = {
   apexX: 50, // % of viewport width
   apexYLandscape: 12, // % of viewport height
   apexYPortrait: 24,
-  spreadDeg: 30, // half-angle of the cone in screen space
+  spreadDeg: 40, // half-angle of the cone in screen space
   reachVh: 95, // characteristic distance falloff
 } as const;
 
@@ -80,7 +80,7 @@ export const BEAM = {
 export const SPOT = {
   color: 0xffc97c,
   intensity: 550,
-  angle: 0.55,
+  angle: 0.72,
   penumbra: 0.45,
   decay: 1.6,
 } as const;

@@ -70,8 +70,8 @@ export const LIGHT_POOL = {
  */
 export const BEAM = {
   apexX: 50, // % of viewport width
-  apexYLandscape: 17, // % of viewport height
-  apexYPortrait: 30,
+  apexYLandscape: 12, // % of viewport height
+  apexYPortrait: 24,
   spreadDeg: 30, // half-angle of the cone in screen space
   reachVh: 95, // characteristic distance falloff
 } as const;

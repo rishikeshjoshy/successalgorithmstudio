@@ -20,7 +20,7 @@ interface LampSceneProps {
 }
 
 const DUST_COUNT = 110;
-const CONE_HEIGHT = 2.3;
+const CONE_HEIGHT = 2.63;
 const BASE_TILT_X = 0.05;
 
 /**
@@ -89,14 +89,14 @@ export default function LampScene({ state }: LampSceneProps) {
 
     // --- the lamp ---
     const head = new THREE.Group();
-    head.position.set(0, 2.62, 0);
+    head.position.set(0, 2.95, 0);
     scene.add(head);
 
     const cord = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.012, 0.012, 1.0, 8),
+      new THREE.CylinderGeometry(0.012, 0.012, 1.6, 8),
       new THREE.MeshStandardMaterial({ color: 0x1a1714, roughness: 0.6 })
     );
-    cord.position.set(0, 3.12, 0);
+    cord.position.set(0, 3.75, 0);
     scene.add(cord);
 
     // Procedural carrom lamp shell — hidden when a real GLTF model is supplied.

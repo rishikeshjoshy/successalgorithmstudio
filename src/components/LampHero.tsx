@@ -61,7 +61,7 @@ export default function LampHero() {
           aria-hidden={brandHidden}
           className="light-mask pointer-events-none absolute inset-0"
         >
-          <div className="absolute inset-x-0 top-[33%] flex -translate-y-1/2 flex-col items-center px-4 md:top-[40%]">
+          <div className="absolute inset-x-0 top-[44%] flex -translate-y-1/2 flex-col items-center px-4 md:top-[50%]">
             <StudioName />
           </div>
         </div>

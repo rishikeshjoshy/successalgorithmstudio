@@ -84,14 +84,21 @@ export function useHeroTimelines({ scopeRef, lampState }: UseHeroTimelinesArgs) 
               repeat: -1,
               delay: 1.8,
             });
-            gsap.to(lampState, {
-              glow: () => gsap.utils.random(0.94, 1.06),
-              duration: () => gsap.utils.random(0.7, 1.8),
-              ease: "sine.inOut",
-              repeat: -1,
-              repeatRefresh: true,
-              delay: 2.2,
-            });
+            // Gentle, continuous glow breath. Must yoyo: a repeating tween
+            // without it snaps glow back to its start value at every cycle
+            // boundary, strobing the whole lit scene (lamp, cone, lit text).
+            gsap.fromTo(
+              lampState,
+              { glow: 0.97 },
+              {
+                glow: 1.03,
+                duration: 3,
+                ease: "sine.inOut",
+                yoyo: true,
+                repeat: -1,
+                delay: 2.2,
+              }
+            );
             pulseRef.current = gsap.to(".js-hero-button", {
               scale: 1.04,
               duration: 1.5,

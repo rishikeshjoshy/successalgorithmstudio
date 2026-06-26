@@ -106,7 +106,7 @@ body {
 .button {
   --stone-50: #fafaf9;
   --stone-800: #292524;
-  --yellow-400: #facc15;
+  --yellow-400: var(--color-lamp); /* match the lamp's emitted light (#ffc97c) */
 
   font-family: "Rubik", sans-serif;
   cursor: pointer;
@@ -334,7 +334,7 @@ body {
 .services-toggle {
   --stone-50: #fafaf9;
   --stone-800: #292524;
-  --yellow-400: #facc15;
+  --yellow-400: var(--color-lamp); /* match the lamp's emitted light (#ffc97c) */
 
   font-size: 1rem;
   cursor: pointer;

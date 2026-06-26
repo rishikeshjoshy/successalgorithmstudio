@@ -9,9 +9,9 @@ interface StoryCircleProps {
 
 /**
  * Navigation anchor flanking the board (OUR STORY / YOUR STORY), rendered as a
- * 3D "cube" button (styles in globals.css). The outer wrapper handles edge
- * positioning so GSAP can animate the anchor freely; js-circle is the intro
- * hook and js-brand-el hides it when services mode takes over.
+ * neobrutalist button (styles in globals.css). The outer wrapper handles edge
+ * positioning; js-circle is the intro hook and js-brand-el hides it when
+ * services mode takes over.
  */
 export default function StoryCircle({ label, side, href }: StoryCircleProps) {
   return (
@@ -20,18 +20,11 @@ export default function StoryCircle({ label, side, href }: StoryCircleProps) {
         side === "left" ? "left-[3.5vw]" : "right-[3.5vw]"
       }`}
     >
-      <a href={href} className="js-circle js-brand-el btn w-fit">
-        <div className="cube">
-          <div className="bg-top" aria-hidden>
-            <div className="bg-inner" />
+      <a href={href} className="js-circle js-brand-el button">
+        <div>
+          <div>
+            <div className="uppercase tracking-[0.12em]">{label}</div>
           </div>
-          <div className="bg-right" aria-hidden>
-            <div className="bg-inner" />
-          </div>
-          <div className="bg" aria-hidden>
-            <div className="bg-inner" />
-          </div>
-          <div className="text uppercase">{label}</div>
         </div>
       </a>
     </div>

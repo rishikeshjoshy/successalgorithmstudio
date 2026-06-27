@@ -85,8 +85,8 @@ export const SPOT = {
   decay: 1.6,
 } as const;
 
-/** macOS-style dock magnification. */
-export const DOCK_MAGNIFY = { radius: 120, scale: 0.55, lift: 16 } as const;
+/** macOS-style dock magnification (tuned for the larger card items). */
+export const DOCK_MAGNIFY = { radius: 240, scale: 0.28, lift: 8 } as const;
 
 export const EASES = {
   out: "power3.out",

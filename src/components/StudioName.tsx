@@ -13,12 +13,12 @@ export default function StudioName() {
           "0 0 calc(var(--lit, 0) * 46px) rgb(255 201 124 / calc(var(--lit, 0) * 0.4))",
       }}
     >
-      <h1 className="font-display text-[clamp(2.6rem,8.5vw,6.5rem)] leading-[0.95] text-bone">
+      <h1 className="font-accent text-[clamp(1.8rem,5.5vw,4.4rem)] leading-[1] text-bone">
         <span className="block">Success</span>
-        <span className="block italic text-lamp-bright">Algorithm</span>
+        <span className="block text-lamp-bright">Algorithm</span>
       </h1>
       <p className="ml-[0.7em] mt-4 text-[clamp(0.7rem,1.4vw,1rem)] uppercase tracking-[0.7em] text-bone-dim">
-        Studio
+        Studios
       </p>
     </header>
   );

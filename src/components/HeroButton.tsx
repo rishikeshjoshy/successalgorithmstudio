@@ -26,7 +26,7 @@ export default function HeroButton({ mode, onToggle }: HeroButtonProps) {
       >
         <div>
           <span key={mode} className="animate-[fade-in_0.35s_ease] uppercase tracking-[0.18em]">
-            {services ? "Back to the board" : "Switch on services"}
+            {services ? "Back to the board" : "Explore our services"}
           </span>
         </div>
       </button>

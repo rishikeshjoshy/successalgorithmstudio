@@ -8,12 +8,8 @@ interface ServiceCardsProps {
   active: boolean;
 }
 
-/**
- * The three service cards shown in services mode, sitting inside the lamp's
- * pool of light. GSAP handles entrance (via useHeroTimelines) and the hover
- * elevation + cursor parallax here. Cards brighten when the light passes
- * over them (--lit).
- */
+const CARD_VARIANTS = ["gold", "silver", "copper"] as const;
+
 export default function ServiceCards({ active }: ServiceCardsProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -71,38 +67,45 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
         active ? "" : "pointer-events-none"
       }`}
     >
-      <ul className="mx-auto flex w-full max-w-sm flex-col items-stretch justify-center gap-2.5 md:max-w-4xl md:flex-row md:gap-6">
+      <ul className="mx-auto flex w-full max-w-sm flex-col items-stretch justify-center gap-8 md:max-w-4xl md:flex-row md:gap-10">
         {SERVICES.map((service, index) => (
           <li key={service.id} className="md:flex-1">
-            <article
-              data-lit-target
-              className="js-service-card group relative h-full rounded-2xl border border-white/10 bg-[#14100b]/60 p-4 backdrop-blur-md md:min-h-[15rem] md:p-7"
-              style={{
-                boxShadow:
-                  "0 30px 60px rgb(0 0 0 / 0.55), 0 0 calc(var(--lit, 0) * 44px) rgb(255 201 124 / calc(var(--lit, 0) * 0.18))",
-                filter: "brightness(calc(0.82 + var(--lit, 0) * 0.55))",
-              }}
+            <div
+              className={`service-card service-card--${CARD_VARIANTS[index]} js-service-card group`}
             >
-              <span className="text-[11px] tracking-[0.3em] text-brass">
-                0{index + 1}
-              </span>
-              <h3 className="mt-1.5 font-display text-lg text-lamp-bright md:mt-2 md:text-2xl">
-                {service.name}
-              </h3>
-              <p className="mt-2 text-xs leading-snug text-bone-dim md:mt-3 md:text-sm md:leading-relaxed">
-                {service.outcome}
-              </p>
-              <a
-                href={service.caseHref}
-                tabIndex={active ? 0 : -1}
-                className="mt-3 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-bone transition-colors hover:text-lamp focus-visible:text-lamp md:mt-5 md:text-xs"
+              <div
+                data-lit-target
+                className="service-card__face"
+                style={{
+                  boxShadow:
+                    "0 30px 60px rgb(0 0 0 / 0.6), 0 0 calc(var(--lit, 0) * 44px) rgb(255 201 124 / calc(var(--lit, 0) * 0.2))",
+                  filter: "brightness(calc(0.82 + var(--lit, 0) * 0.55))",
+                }}
               >
-                See a real case
-                <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-                  →
+                <span className="text-[11px] tracking-[0.3em] text-white/50">
+                  0{index + 1}
                 </span>
-              </a>
-            </article>
+                <h3 className="font-accent text-lg text-white md:text-xl">
+                  {service.name}
+                </h3>
+                <p className="text-xs leading-snug text-white/75 md:text-sm md:leading-relaxed">
+                  {service.outcome}
+                </p>
+                <a
+                  href={service.caseHref}
+                  tabIndex={active ? 0 : -1}
+                  className="mt-auto inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-white/50 transition-colors hover:text-white focus-visible:text-white"
+                >
+                  See a real case
+                  <span
+                    aria-hidden
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
+                </a>
+              </div>
+            </div>
           </li>
         ))}
       </ul>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Space_Grotesk } from "next/font/google";
+import { Fraunces, Space_Grotesk, Boldonse } from "next/font/google";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -12,8 +12,14 @@ const grotesk = Space_Grotesk({
   subsets: ["latin"],
 });
 
+const boldonse = Boldonse({
+  variable: "--font-boldonse",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Success Algorithm Studio",
+  title: "Success Algorithm Studios",
   description:
     "A dark room. One lamp. Everything that matters happens inside the light.",
 };
@@ -30,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${grotesk.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${grotesk.variable} ${boldonse.variable} h-full antialiased`}
     >
       <body className="h-full">{children}</body>
     </html>

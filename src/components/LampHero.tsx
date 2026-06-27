@@ -6,7 +6,8 @@ import StudioName from "@/components/StudioName";
 import HeroButton from "@/components/HeroButton";
 import StoryCircle from "@/components/StoryCircle";
 import ServiceCards from "@/components/ServiceCards";
-import Dock from "@/components/Dock";
+import BottomTray from "@/components/BottomTray";
+
 import { useLampControls } from "@/hooks/useLampControls";
 import { useHeroTimelines } from "@/hooks/useHeroTimelines";
 import { createLampSceneState } from "@/lib/lamp-state";
@@ -67,22 +68,20 @@ export default function LampHero() {
         </div>
 
         <div inert={brandHidden} className={brandHidden ? "pointer-events-none" : undefined}>
-          <StoryCircle side="left" label="Our Story" hint="where we came from" href="#our-story" />
-          <StoryCircle side="right" label="Your Story" hint="where you're going" href="#your-story" />
+          <StoryCircle side="left" label="Our Story" hint="where we came from" href="#our-story" mode={mode} />
+          <StoryCircle side="right" label="Your Story" hint="where you're going" href="#your-story" mode={mode} />
         </div>
 
         <ServiceCards active={mode === "services"} />
 
-        <div className="absolute inset-x-0 top-[76%] flex justify-center md:top-[70%]">
+        <div className="absolute inset-x-0 top-[72%] flex justify-center md:top-[66%]">
           <HeroButton
             mode={mode}
             onToggle={() => setMode((m) => (m === "brand" ? "services" : "brand"))}
           />
         </div>
 
-        <div className="absolute inset-x-0 bottom-4 z-30 flex justify-center md:bottom-6">
-          <Dock />
-        </div>
+        <BottomTray />
       </div>
     </main>
   );

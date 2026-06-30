@@ -596,7 +596,16 @@ body {
   text-align: center;
   transition: filter 200ms ease;
 
-  &:hover {
+  @media (hover: hover) {
+    &:hover {
+      filter:
+        drop-shadow(0 0 6px rgb(255 201 124 / 1))
+        drop-shadow(0 0 16px rgb(255 201 124 / 0.7))
+        drop-shadow(0 0 36px rgb(255 201 124 / 0.4));
+    }
+  }
+
+  &:active {
     filter:
       drop-shadow(0 0 6px rgb(255 201 124 / 1))
       drop-shadow(0 0 16px rgb(255 201 124 / 0.7))

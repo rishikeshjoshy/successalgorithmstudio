@@ -577,24 +577,60 @@ body {
   color: var(--color-lamp);
 }
 
-.tray-card--single {
-  max-width: 240px;
-  width: 240px;
-  flex: none;
-  padding: 0 8px;
-  border-color: rgb(255 201 124 / 0.2);
-}
+/* Knowledge Repository tab — half-pill shape, Explore Our Services visual style */
+.knowledge-tab {
+  --stone-50: #fafaf9;
+  --stone-800: #292524;
+  --yellow-400: var(--color-lamp);
 
-.tray-card--single .tray-card__header {
-  align-items: center;
-}
+  font-size: 0.75rem;
+  cursor: pointer;
+  position: relative;
+  font-family: var(--font-accent);
+  font-weight: 400;
+  line-height: 1;
+  padding: 1px 1px 0;
+  border-radius: 14px 14px 0 0;
+  background-color: var(--yellow-400);
+  color: var(--stone-50);
+  text-align: center;
+  box-shadow:
+    0 0 0 2px var(--stone-800),
+    0.5px 0.5px 0 2px var(--stone-800),
+    1px 1px 0 2px var(--stone-800),
+    1.5px 1.5px 0 2px var(--stone-800),
+    2px 2px 0 2px var(--stone-800),
+    2.5px 2.5px 0 2px var(--stone-800),
+    3px 3px 0 2px var(--stone-800),
+    3.5px 3.5px 0 2px var(--stone-800),
+    4px 4px 0 2px var(--stone-800),
+    0 0 0 4px var(--stone-50),
+    0.5px 0.5px 0 4px var(--stone-50),
+    1px 1px 0 4px var(--stone-50),
+    1.5px 1.5px 0 4px var(--stone-50),
+    2px 2px 0 4px var(--stone-50),
+    2.5px 2.5px 0 4px var(--stone-50),
+    3px 3px 0 4px var(--stone-50),
+    3.5px 3.5px 0 4px var(--stone-50),
+    4px 4px 0 4px var(--stone-50);
 
-.tray-card--single.tray-card--active {
-  border-color: var(--color-lamp);
-}
+  & > div {
+    position: relative;
+    pointer-events: none;
+    background-color: var(--stone-800);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
 
-.tray-card--single.tray-card--active .tray-card__title {
-  color: var(--color-lamp);
+    & > span {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      filter: drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.25));
+    }
+  }
 }
 
 /* ─── Knowledge drawer content ─── */
@@ -696,7 +732,7 @@ body {
 .tray-overlay {
   position: absolute;
   inset: 0;
-  bottom: 72px;
+  bottom: 50px;
   z-index: 29;
   background: #07050300;
   display: flex;

@@ -82,15 +82,15 @@ export default function BottomTray() {
         </div>
       </div>
 
-      {/* Single tab */}
-      <div className="absolute inset-x-0 bottom-0 z-30 flex justify-center px-3">
+      {/* Single tab — half-pill shape, Explore Our Services visual style */}
+      <div className="absolute inset-x-0 bottom-0 z-30 flex justify-center">
         <div
-          className={`tray-card tray-card--single${open ? " tray-card--active" : ""}`}
+          className="knowledge-tab"
           onPointerEnter={() => { cancelClose(); openTray(); }}
           onPointerLeave={scheduleClose}
         >
-          <div className="tray-card__header">
-            <span className="tray-card__title">Knowledge Repository</span>
+          <div>
+            <span>Knowledge Repository</span>
           </div>
         </div>
       </div>

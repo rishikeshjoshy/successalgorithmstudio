@@ -71,22 +71,6 @@ export default function LampScene({ state }: LampSceneProps) {
       );
     }
 
-    // --- room ---
-    const floor = new THREE.Mesh(
-      new THREE.CircleGeometry(16, 48).rotateX(-Math.PI / 2),
-      new THREE.MeshStandardMaterial({ color: 0x0c0a07, roughness: 0.93 })
-    );
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    const wall = new THREE.Mesh(
-      new THREE.PlaneGeometry(40, 16),
-      new THREE.MeshStandardMaterial({ color: 0x070503, roughness: 1 })
-    );
-    wall.position.set(0, 6, -3.6);
-    wall.receiveShadow = true;
-    scene.add(wall);
-
     // --- the lamp ---
     const head = new THREE.Group();
     head.position.set(0, 2.95, 0);

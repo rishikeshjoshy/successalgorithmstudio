@@ -16,7 +16,12 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cooldownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevActiveIdRef = useRef<string | null>(null);
+  // true while overlay is open — prevents card onLeave from firing a close/de-tilt
+  const overlayOpenRef = useRef(false);
+  // true for 500ms after overlay closes — prevents immediate re-open if cursor is over card
+  const cooldownRef = useRef(false);
 
   const scheduleClose = useCallback(() => {
     closeTimer.current = setTimeout(() => setActiveId(null), 90);
@@ -26,10 +31,13 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
   }, []);
 
-  // Close overlay when switching out of services mode
+  // Close overlay when switching out of services mode or pressing Escape
   useEffect(() => {
     if (!active) {
       if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
+      if (cooldownTimer.current) { clearTimeout(cooldownTimer.current); cooldownTimer.current = null; }
+      overlayOpenRef.current = false;
+      cooldownRef.current = false;
       setActiveId(null);
     }
   }, [active]);
@@ -52,6 +60,14 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
       gsap.set(content, { opacity: 0, y: 28 });
       gsap.to(content, { opacity: 1, y: 0, duration: 0.45, delay: 0.25, ease: "power3.out" });
     } else if (!isOpen && wasOpen) {
+      // Overlay closing: flip refs, start cooldown, reset card tilts, play close animation
+      overlayOpenRef.current = false;
+      cooldownRef.current = true;
+      if (cooldownTimer.current) clearTimeout(cooldownTimer.current);
+      cooldownTimer.current = setTimeout(() => { cooldownRef.current = false; }, 500);
+      // Reset any card that was left elevated (onLeave was suppressed while overlay was open)
+      const cards = gsap.utils.toArray<HTMLElement>(".js-service-card", wrapRef.current);
+      gsap.to(cards, { scale: 1, y: 0, rotationX: 0, rotationY: 0, duration: 0.45, ease: "power3.out" });
       gsap.to(overlay, { clipPath: "inset(100% 0 0 0)", duration: 0.38, ease: "power3.in", overwrite: true });
     }
   }, [activeId]);
@@ -73,18 +89,28 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
         const rotY = gsap.quickTo(card, "rotationY", { duration: 0.5, ease: "power2.out" });
 
         const onMove = contextSafe((event: PointerEvent) => {
+          if (overlayOpenRef.current) return;
           const rect = card.getBoundingClientRect();
           const px = (event.clientX - rect.left) / rect.width - 0.5;
           const py = (event.clientY - rect.top) / rect.height - 0.5;
           rotY(px * 7);
           rotX(-py * 7);
         });
+
         const onEnter = contextSafe(() => {
+          if (cooldownRef.current) return; // overlay just closed — ignore brief re-hover
+          overlayOpenRef.current = true; // set BEFORE setActiveId so onLeave sees it immediately
           cancelClose();
           setActiveId(service.id);
           gsap.to(card, { scale: 1.03, y: -6, duration: 0.35, ease: "power3.out" });
         });
+
         const onLeave = contextSafe(() => {
+          // When the overlay opens above the card, the browser fires pointerleave on
+          // the card (cursor "moved" to the higher-z element). overlayOpenRef lets us
+          // detect this and bail — no tilt reset, no scheduleClose, no fight with
+          // the overlay's cancelClose. The overlay's own onPointerLeave handles closing.
+          if (overlayOpenRef.current) return;
           scheduleClose();
           rotX(0);
           rotY(0);
@@ -110,8 +136,8 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
 
   return (
     <>
-      {/* Case study overlay — pointer-events:none so the overlay never steals
-          events from the cards beneath; only the content div is interactive */}
+      {/* Case study overlay — pointer-events:none so dark background never steals
+          card events. Only .case-drawer (pointer-events:auto) is interactive. */}
       <div
         ref={overlayRef}
         className="case-overlay"

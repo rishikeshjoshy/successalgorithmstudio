@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { SERVICES } from "@/lib/constants";
+import { SERVICES } from "@/lib/site";
 
 interface ServiceCardsProps {
   active: boolean;

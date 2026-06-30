@@ -1,12 +1,5 @@
 export type HeroMode = "brand" | "services";
 
-export interface ServiceItem {
-  id: string;
-  name: string;
-  outcome: string;
-  caseHref: string;
-}
-
 export type DockIconId = "case-studies" | "process" | "experiments" | "contact";
 
 export interface DockItemData {
@@ -14,27 +7,6 @@ export interface DockItemData {
   label: string;
   href: string;
 }
-
-export const SERVICES: ServiceItem[] = [
-  {
-    id: "brand-engines",
-    name: "Brand Engines",
-    outcome: "Identity systems engineered to make small studios impossible to forget.",
-    caseHref: "#case-brand-engines",
-  },
-  {
-    id: "interactive-web",
-    name: "Interactive Web",
-    outcome: "WebGL-grade websites that turn idle visitors into believers.",
-    caseHref: "#case-interactive-web",
-  },
-  {
-    id: "growth-algorithms",
-    name: "Growth Algorithms",
-    outcome: "Funnels, experiments and automation tuned until the numbers sing.",
-    caseHref: "#case-growth-algorithms",
-  },
-];
 
 export const DOCK_ITEMS: DockItemData[] = [
   { id: "case-studies", label: "Case Studies", href: "#case-studies" },

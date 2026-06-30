@@ -2,17 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { gsap } from "@/lib/gsap";
-
-const DOCS = [
-  { id: "brand",    type: "PDF", typeColor: "#9080c8", title: "Brand Guidelines",    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod." },
-  { id: "case",     type: "PDF", typeColor: "#90b890", title: "Case Study",           desc: "Pellentesque habitant morbi tristique senectus et netus malesuada fames." },
-  { id: "reel",     type: "VID", typeColor: "#c8a060", title: "Showreel",             desc: "Curabitur pretium tincidunt lacus nulla gravida orci a odio nullam varius." },
-  { id: "deck",     type: "PDF", typeColor: "#a0b8d0", title: "Capabilities Deck",   desc: "Fusce dapibus tellus ac cursus commodo tortor mauris condimentum nibh." },
-  { id: "assets",   type: "ZIP", typeColor: "#c87878", title: "Asset Pack",           desc: "Etiam porta sem malesuada magna mollis euismod cum sociis natoque penatibus." },
-  { id: "playbook", type: "DOC", typeColor: "#e8b840", title: "Growth Playbook",      desc: "Integer posuere erat a ante venenatis dapibus posuere velit aliquet morbi." },
-  { id: "system",   type: "PDF", typeColor: "#ffc97c", title: "Design System",        desc: "Maecenas sed diam eget risus varius blandit sit amet non magna donec." },
-  { id: "report",   type: "PDF", typeColor: "#9080c8", title: "Analytics Report",     desc: "Nullam quis risus eget urna mollis ornare vel eu leo vestibulum ligula." },
-];
+import { KNOWLEDGE_DOCS } from "@/lib/site";
 
 export default function BottomTray() {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -63,14 +53,14 @@ export default function BottomTray() {
         <div ref={contentRef} className="knowledge-drawer">
           <p className="knowledge-drawer__eyebrow">Knowledge Repository</p>
           <div className="knowledge-grid">
-            {DOCS.map((doc) => (
+            {KNOWLEDGE_DOCS.map((doc) => (
               <div key={doc.id} className="doc-card">
                 <span className="doc-card__type" style={{ color: doc.typeColor, borderColor: doc.typeColor }}>
                   {doc.type}
                 </span>
                 <h3 className="doc-card__title">{doc.title}</h3>
                 <p className="doc-card__desc">{doc.desc}</p>
-                <a href="#" className="doc-card__dl" aria-label={`Link to G-Drive for ${doc.title}`}>
+                <a href={doc.href} className="doc-card__dl" aria-label={`Link to G-Drive for ${doc.title}`} target="_blank" rel="noopener noreferrer">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
                     <path d="M6 2H2.5A1.5 1.5 0 0 0 1 3.5v8A1.5 1.5 0 0 0 2.5 13h8A1.5 1.5 0 0 0 12 11.5V8M8 1h5v5M12.5 1.5 6.5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>

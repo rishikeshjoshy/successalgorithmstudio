@@ -594,6 +594,15 @@ body {
   background-color: var(--yellow-400);
   color: var(--stone-50);
   text-align: center;
+  transition: filter 200ms ease;
+
+  &:hover {
+    filter:
+      drop-shadow(0 0 6px rgb(255 201 124 / 1))
+      drop-shadow(0 0 16px rgb(255 201 124 / 0.7))
+      drop-shadow(0 0 36px rgb(255 201 124 / 0.4));
+  }
+
   box-shadow:
     0 0 0 2px var(--stone-800),
     0.5px 0.5px 0 2px var(--stone-800),

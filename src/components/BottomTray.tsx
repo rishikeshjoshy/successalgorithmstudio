@@ -70,11 +70,11 @@ export default function BottomTray() {
                 </span>
                 <h3 className="doc-card__title">{doc.title}</h3>
                 <p className="doc-card__desc">{doc.desc}</p>
-                <a href="#" className="doc-card__dl" aria-label={`Download ${doc.title}`}>
+                <a href="#" className="doc-card__dl" aria-label={`Link to G-Drive for ${doc.title}`}>
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-                    <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M6 2H2.5A1.5 1.5 0 0 0 1 3.5v8A1.5 1.5 0 0 0 2.5 13h8A1.5 1.5 0 0 0 12 11.5V8M8 1h5v5M12.5 1.5 6.5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  Download
+                  Link to G-Drive
                 </a>
               </div>
             ))}

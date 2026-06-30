@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { SERVICES } from "@/lib/site";
 
@@ -12,7 +12,51 @@ const CARD_VARIANTS = ["gold", "silver", "copper"] as const;
 
 export default function ServiceCards({ active }: ServiceCardsProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevActiveIdRef = useRef<string | null>(null);
 
+  const scheduleClose = useCallback(() => {
+    closeTimer.current = setTimeout(() => setActiveId(null), 90);
+  }, []);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
+  }, []);
+
+  // Close overlay when switching out of services mode
+  useEffect(() => {
+    if (!active) {
+      if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
+      setActiveId(null);
+    }
+  }, [active]);
+
+  // GSAP overlay open/close — only animates on null↔service transitions
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    const content = contentRef.current;
+    if (!overlay || !content) return;
+
+    const wasOpen = prevActiveIdRef.current !== null;
+    const isOpen = activeId !== null;
+    prevActiveIdRef.current = activeId;
+
+    if (isOpen && !wasOpen) {
+      gsap.fromTo(overlay,
+        { clipPath: "inset(100% 0 0 0)" },
+        { clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "expo.out", overwrite: true }
+      );
+      gsap.set(content, { opacity: 0, y: 28 });
+      gsap.to(content, { opacity: 1, y: 0, duration: 0.45, delay: 0.25, ease: "power3.out" });
+    } else if (!isOpen && wasOpen) {
+      gsap.to(overlay, { clipPath: "inset(100% 0 0 0)", duration: 0.38, ease: "power3.in", overwrite: true });
+    }
+  }, [activeId]);
+
+  // 3D tilt + case study hover state
   useGSAP(
     (_, contextSafe) => {
       const wrap = wrapRef.current;
@@ -22,7 +66,8 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
       const cards = gsap.utils.toArray<HTMLElement>(".js-service-card", wrap);
       const cleanups: Array<() => void> = [];
 
-      cards.forEach((card) => {
+      cards.forEach((card, i) => {
+        const service = SERVICES[i];
         gsap.set(card, { transformPerspective: 900 });
         const rotX = gsap.quickTo(card, "rotationX", { duration: 0.5, ease: "power2.out" });
         const rotY = gsap.quickTo(card, "rotationY", { duration: 0.5, ease: "power2.out" });
@@ -35,9 +80,12 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
           rotX(-py * 7);
         });
         const onEnter = contextSafe(() => {
+          cancelClose();
+          setActiveId(service.id);
           gsap.to(card, { scale: 1.03, y: -6, duration: 0.35, ease: "power3.out" });
         });
         const onLeave = contextSafe(() => {
+          scheduleClose();
           rotX(0);
           rotY(0);
           gsap.to(card, { scale: 1, y: 0, duration: 0.45, ease: "power3.out" });
@@ -58,57 +106,95 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
     { scope: wrapRef }
   );
 
+  const activeService = SERVICES.find((s) => s.id === activeId) ?? null;
+
   return (
-    <div
-      ref={wrapRef}
-      inert={!active}
-      aria-hidden={!active}
-      className={`js-service-cards absolute inset-x-0 top-[43%] z-20 flex -translate-y-1/2 justify-center px-5 md:top-[46%] ${
-        active ? "" : "pointer-events-none"
-      }`}
-    >
-      <ul className="mx-auto flex w-full max-w-sm flex-col items-stretch justify-center gap-8 md:max-w-4xl md:flex-row md:gap-10">
-        {SERVICES.map((service, index) => (
-          <li key={service.id} className="md:flex-1">
-            <div
-              className={`service-card service-card--${CARD_VARIANTS[index]} js-service-card group`}
-            >
-              <div
-                data-lit-target
-                className="service-card__face"
-                style={{
-                  boxShadow:
-                    "0 30px 60px rgb(0 0 0 / 0.6), 0 0 calc(var(--lit, 0) * 44px) rgb(255 201 124 / calc(var(--lit, 0) * 0.2))",
-                  filter: "brightness(calc(0.82 + var(--lit, 0) * 0.55))",
-                }}
-              >
-                <span className="text-[11px] tracking-[0.3em] text-white/50">
-                  0{index + 1}
-                </span>
-                <h3 className="font-accent text-lg text-white md:text-xl">
-                  {service.name}
-                </h3>
-                <p className="text-xs leading-snug text-white/75 md:text-sm md:leading-relaxed">
-                  {service.outcome}
-                </p>
-                <a
-                  href={service.caseHref}
-                  tabIndex={active ? 0 : -1}
-                  className="mt-auto inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-white/50 transition-colors hover:text-white focus-visible:text-white"
-                >
-                  See a real case
-                  <span
-                    aria-hidden
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  >
-                    →
-                  </span>
-                </a>
+    <>
+      {/* Case study overlay */}
+      <div
+        ref={overlayRef}
+        className="case-overlay"
+        style={{
+          clipPath: "inset(100% 0 0 0)",
+          pointerEvents: activeId ? "auto" : "none",
+        } as React.CSSProperties}
+        onPointerEnter={cancelClose}
+        onPointerLeave={scheduleClose}
+      >
+        <div ref={contentRef} className="case-drawer">
+          {activeService && (
+            <>
+              <p className="case-drawer__eyebrow">{activeService.name} — Case Studies</p>
+              <div className="case-grid">
+                {activeService.caseStudies.map((cs) => (
+                  <div key={cs.id} className="case-card">
+                    <div className="case-card__tags">
+                      {cs.tags.map((tag) => (
+                        <span key={tag} className="case-card__tag">{tag}</span>
+                      ))}
+                    </div>
+                    <p className="case-card__client">{cs.client} · {cs.year}</p>
+                    <h3 className="case-card__title">{cs.title}</h3>
+                    <p className="case-card__summary">{cs.summary}</p>
+                    <a
+                      href={cs.href}
+                      className="case-card__link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                        <path d="M6 2H2.5A1.5 1.5 0 0 0 1 3.5v8A1.5 1.5 0 0 0 2.5 13h8A1.5 1.5 0 0 0 12 11.5V8M8 1h5v5M12.5 1.5 6.5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      View Case Study
+                    </a>
+                  </div>
+                ))}
               </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Service cards */}
+      <div
+        ref={wrapRef}
+        inert={!active}
+        aria-hidden={!active}
+        className={`js-service-cards absolute inset-x-0 top-[43%] z-20 flex -translate-y-1/2 justify-center px-5 md:top-[46%] ${
+          active ? "" : "pointer-events-none"
+        }`}
+      >
+        <ul className="mx-auto flex w-full max-w-sm flex-col items-stretch justify-center gap-8 md:max-w-4xl md:flex-row md:gap-10">
+          {SERVICES.map((service, index) => (
+            <li key={service.id} className="md:flex-1">
+              <div className={`service-card service-card--${CARD_VARIANTS[index]} js-service-card`}>
+                <div
+                  data-lit-target
+                  className="service-card__face"
+                  style={{
+                    boxShadow:
+                      "0 30px 60px rgb(0 0 0 / 0.6), 0 0 calc(var(--lit, 0) * 44px) rgb(255 201 124 / calc(var(--lit, 0) * 0.2))",
+                    filter: "brightness(calc(0.82 + var(--lit, 0) * 0.55))",
+                  }}
+                >
+                  <span className="text-[11px] tracking-[0.3em] text-white/50">
+                    0{index + 1}
+                  </span>
+                  <h3 className="font-accent text-lg text-white md:text-xl">
+                    {service.name}
+                  </h3>
+                  <p className="text-xs leading-snug text-white/75 md:text-sm md:leading-relaxed">
+                    {service.outcome}
+                  </p>
+                  <span className="mt-auto inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-white/30">
+                    Hover to explore
+                  </span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }

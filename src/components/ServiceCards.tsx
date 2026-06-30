@@ -110,18 +110,19 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
 
   return (
     <>
-      {/* Case study overlay */}
+      {/* Case study overlay — pointer-events:none so the overlay never steals
+          events from the cards beneath; only the content div is interactive */}
       <div
         ref={overlayRef}
         className="case-overlay"
-        style={{
-          clipPath: "inset(100% 0 0 0)",
-          pointerEvents: activeId ? "auto" : "none",
-        } as React.CSSProperties}
-        onPointerEnter={cancelClose}
-        onPointerLeave={scheduleClose}
+        style={{ clipPath: "inset(100% 0 0 0)" } as React.CSSProperties}
       >
-        <div ref={contentRef} className="case-drawer">
+        <div
+          ref={contentRef}
+          className="case-drawer"
+          onPointerEnter={cancelClose}
+          onPointerLeave={scheduleClose}
+        >
           {activeService && (
             <>
               <p className="case-drawer__eyebrow">{activeService.name} — Case Studies</p>

@@ -42,13 +42,15 @@ export default function BottomTray() {
 
   return (
     <>
-      {/* Fullscreen overlay */}
+      {/* Fullscreen overlay
+          Desktop: hover enter/leave keeps it open.
+          Touch: pointerType checks skip the hover handlers; tab onClick toggles. */}
       <div
         ref={overlayRef}
         className="tray-overlay"
         style={{ clipPath: "inset(100% 0 0 0)" } as React.CSSProperties}
-        onPointerEnter={cancelClose}
-        onPointerLeave={scheduleClose}
+        onPointerEnter={(e) => { if (e.pointerType !== "touch") cancelClose(); }}
+        onPointerLeave={(e) => { if (e.pointerType !== "touch") scheduleClose(); }}
       >
         <div ref={contentRef} className="knowledge-drawer">
           <p className="knowledge-drawer__eyebrow">Knowledge Repository</p>
@@ -72,12 +74,25 @@ export default function BottomTray() {
         </div>
       </div>
 
-      {/* Single tab — half-pill shape, Explore Our Services visual style */}
+      {/* Single tab — half-pill shape, Explore Our Services visual style
+          Desktop: hover to open. Touch: tap to toggle open/closed. */}
       <div className="absolute inset-x-0 bottom-0 z-30 flex justify-center">
         <div
           className="knowledge-tab"
-          onPointerEnter={() => { cancelClose(); openTray(); }}
-          onPointerLeave={scheduleClose}
+          onPointerEnter={(e) => {
+            if (e.pointerType === "touch") return; // touch uses onClick
+            cancelClose();
+            openTray();
+          }}
+          onPointerLeave={(e) => {
+            if (e.pointerType === "touch") return;
+            scheduleClose();
+          }}
+          onClick={(e) => {
+            // Touch-only toggle; mouse hover already handles desktop open/close
+            if ((e.nativeEvent as PointerEvent).pointerType !== "touch") return;
+            open ? setOpen(false) : openTray();
+          }}
         >
           <div>
             <span>Knowledge Repository</span>

@@ -15,13 +15,20 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [isTouch, setIsTouch] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cooldownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevActiveIdRef = useRef<string | null>(null);
-  // true while overlay is open — prevents card onLeave from firing a close/de-tilt
+  const activeIdRef = useRef<string | null>(null); // stale-closure-safe read inside GSAP
   const overlayOpenRef = useRef(false);
-  // true for 500ms after overlay closes — prevents immediate re-open if cursor is over card
   const cooldownRef = useRef(false);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(hover: none) and (pointer: coarse)").matches);
+  }, []);
+
+  // Keep activeIdRef in sync for GSAP closures
+  useEffect(() => { activeIdRef.current = activeId; }, [activeId]);
 
   const scheduleClose = useCallback(() => {
     closeTimer.current = setTimeout(() => setActiveId(null), 90);
@@ -31,7 +38,14 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
   }, []);
 
-  // Close overlay when switching out of services mode or pressing Escape
+  // Immediately close the overlay (used by close button and touch toggle)
+  const closeOverlay = useCallback(() => {
+    cancelClose();
+    overlayOpenRef.current = false;
+    setActiveId(null);
+  }, [cancelClose]);
+
+  // Close overlay when switching out of services mode
   useEffect(() => {
     if (!active) {
       if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
@@ -60,19 +74,17 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
       gsap.set(content, { opacity: 0, y: 28 });
       gsap.to(content, { opacity: 1, y: 0, duration: 0.45, delay: 0.25, ease: "power3.out" });
     } else if (!isOpen && wasOpen) {
-      // Overlay closing: flip refs, start cooldown, reset card tilts, play close animation
       overlayOpenRef.current = false;
       cooldownRef.current = true;
       if (cooldownTimer.current) clearTimeout(cooldownTimer.current);
       cooldownTimer.current = setTimeout(() => { cooldownRef.current = false; }, 500);
-      // Reset any card that was left elevated (onLeave was suppressed while overlay was open)
       const cards = gsap.utils.toArray<HTMLElement>(".js-service-card", wrapRef.current);
       gsap.to(cards, { scale: 1, y: 0, rotationX: 0, rotationY: 0, duration: 0.45, ease: "power3.out" });
       gsap.to(overlay, { clipPath: "inset(100% 0 0 0)", duration: 0.38, ease: "power3.in", overwrite: true });
     }
   }, [activeId]);
 
-  // 3D tilt + case study hover state
+  // 3D tilt + case study hover/tap state
   useGSAP(
     (_, contextSafe) => {
       const wrap = wrapRef.current;
@@ -90,6 +102,7 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
 
         const onMove = contextSafe((event: PointerEvent) => {
           if (overlayOpenRef.current) return;
+          if (event.pointerType === "touch") return; // no tilt on touch
           const rect = card.getBoundingClientRect();
           const px = (event.clientX - rect.left) / rect.width - 0.5;
           const py = (event.clientY - rect.top) / rect.height - 0.5;
@@ -97,19 +110,22 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
           rotX(-py * 7);
         });
 
-        const onEnter = contextSafe(() => {
-          if (cooldownRef.current) return; // overlay just closed — ignore brief re-hover
-          overlayOpenRef.current = true; // set BEFORE setActiveId so onLeave sees it immediately
+        const onEnter = contextSafe((event: PointerEvent) => {
+          if (cooldownRef.current) return;
+          // Touch: second tap on same card = close (toggle)
+          if (event.pointerType === "touch" && overlayOpenRef.current && activeIdRef.current === service.id) {
+            closeOverlay();
+            return;
+          }
+          overlayOpenRef.current = true;
           cancelClose();
           setActiveId(service.id);
-          gsap.to(card, { scale: 1.03, y: -6, duration: 0.35, ease: "power3.out" });
+          if (event.pointerType !== "touch") {
+            gsap.to(card, { scale: 1.03, y: -6, duration: 0.35, ease: "power3.out" });
+          }
         });
 
-        const onLeave = contextSafe(() => {
-          // When the overlay opens above the card, the browser fires pointerleave on
-          // the card (cursor "moved" to the higher-z element). overlayOpenRef lets us
-          // detect this and bail — no tilt reset, no scheduleClose, no fight with
-          // the overlay's cancelClose. The overlay's own onPointerLeave handles closing.
+        const onLeave = contextSafe((event: PointerEvent) => {
           if (overlayOpenRef.current) return;
           scheduleClose();
           rotX(0);
@@ -136,8 +152,7 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
 
   return (
     <>
-      {/* Case study overlay — pointer-events:none so dark background never steals
-          card events. Only .case-drawer (pointer-events:auto) is interactive. */}
+      {/* Case study overlay */}
       <div
         ref={overlayRef}
         className="case-overlay"
@@ -146,9 +161,13 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
         <div
           ref={contentRef}
           className="case-drawer"
-          onPointerEnter={cancelClose}
-          onPointerLeave={scheduleClose}
+          onPointerEnter={(e) => { if (e.pointerType !== "touch") cancelClose(); }}
+          onPointerLeave={(e) => { if (e.pointerType !== "touch") scheduleClose(); }}
         >
+          {/* Close button — visible on mobile only (hidden via CSS at md+) */}
+          <button onClick={closeOverlay} className="case-drawer__close" aria-label="Close">
+            ✕ Close
+          </button>
           {activeService && (
             <>
               <p className="case-drawer__eyebrow">{activeService.name} — Case Studies</p>
@@ -182,16 +201,23 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
         </div>
       </div>
 
-      {/* Service cards */}
+      {/* Service cards
+          Mobile: fixed top/bottom, scrollable so all 3 cards fit any screen
+          Desktop: absolute-centered with -translate-y-1/2 */}
       <div
         ref={wrapRef}
         inert={!active}
         aria-hidden={!active}
-        className={`js-service-cards absolute inset-x-0 top-[43%] z-20 flex -translate-y-1/2 justify-center px-5 md:top-[46%] ${
-          active ? "" : "pointer-events-none"
-        }`}
+        className={[
+          "js-service-cards absolute inset-x-0 z-20 flex justify-center px-5",
+          // Mobile: fixed range + scrollable
+          "top-[8%] bottom-[30%] overflow-y-auto items-start",
+          // Desktop: centered
+          "md:top-[46%] md:bottom-auto md:overflow-visible md:-translate-y-1/2 md:items-center",
+          active ? "" : "pointer-events-none",
+        ].join(" ")}
       >
-        <ul className="mx-auto flex w-full max-w-sm flex-col items-stretch justify-center gap-8 md:max-w-4xl md:flex-row md:gap-10">
+        <ul className="mx-auto flex w-full max-w-sm flex-col items-stretch justify-start gap-5 py-3 md:max-w-4xl md:flex-row md:gap-10 md:py-0 md:justify-center">
           {SERVICES.map((service, index) => (
             <li key={service.id} className="md:flex-1">
               <div className={`service-card service-card--${CARD_VARIANTS[index]} js-service-card`}>
@@ -214,7 +240,7 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
                     {service.outcome}
                   </p>
                   <span className="mt-auto inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-white/30">
-                    Hover to explore
+                    {isTouch ? "Tap to explore" : "Hover to explore"}
                   </span>
                 </div>
               </div>

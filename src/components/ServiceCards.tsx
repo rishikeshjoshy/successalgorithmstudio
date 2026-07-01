@@ -220,7 +220,10 @@ export default function ServiceCards({ active }: ServiceCardsProps) {
         <ul className="mx-auto flex w-full max-w-sm flex-col items-stretch justify-start gap-5 py-3 md:max-w-4xl md:flex-row md:gap-10 md:py-0 md:justify-center">
           {SERVICES.map((service, index) => (
             <li key={service.id} className="md:flex-1">
-              <div className={`service-card service-card--${CARD_VARIANTS[index]} js-service-card`}>
+              <div
+                data-open={activeId === service.id ? "true" : undefined}
+                className={`service-card service-card--${CARD_VARIANTS[index]} js-service-card`}
+              >
                 <div
                   data-lit-target
                   className="service-card__face"

@@ -1156,11 +1156,6 @@ body {
 
 /* ─── Mobile responsive ─────────────────────────────────────────────────── */
 @media (max-width: 767px) {
-  /* Story buttons: tighten padding so they don't collide on 375px viewport */
-  .button > div > div > div {
-    padding: 0.55rem 0.85rem;
-  }
-
   /* Service cards: shorter face so all 3 fit without overflowing */
   .service-card__face {
     min-height: 10rem;

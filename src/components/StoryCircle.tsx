@@ -33,9 +33,17 @@ export default function StoryCircle({ label, side, href, mode }: StoryCircleProp
 
   return (
     <div
-      className={`absolute inset-y-0 z-20 flex items-center ${
-        side === "left" ? "left-[3.5vw]" : "right-[3.5vw]"
-      }`}
+      className={[
+        "absolute z-20 flex",
+        // Mobile: stacked in the gap below the studio name, centered horizontally.
+        // "Our Story" (left) sits above "Your Story" (right) — same left-to-right
+        // reading order as the desktop flanking layout.
+        "inset-x-0 -translate-y-1/2 justify-center",
+        side === "left" ? "top-[58%]" : "top-[66%]",
+        // Desktop: restore left/right flanking, vertically centered on the full height.
+        "md:inset-x-auto md:inset-y-0 md:translate-y-0 md:items-center md:justify-start",
+        side === "left" ? "md:left-[3.5vw]" : "md:right-[3.5vw]",
+      ].join(" ")}
     >
       <a
         ref={ref}

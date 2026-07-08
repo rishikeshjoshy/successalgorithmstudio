@@ -7,11 +7,11 @@ interface StoryCircleProps {
   label: string;
   side: "left" | "right";
   href: string;
-  hint?: string;
   mode?: HeroMode;
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-export default function StoryCircle({ label, side, href, mode }: StoryCircleProps) {
+export default function StoryCircle({ label, side, href, mode, onClick }: StoryCircleProps) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function StoryCircle({ label, side, href, mode }: StoryCircleProp
         // reading order as the desktop flanking layout.
         "inset-x-0 -translate-y-1/2 justify-center",
         side === "left" ? "top-[58%]" : "top-[66%]",
-        // Desktop: restore left/right flanking, vertically centered on the full height.
+        // Desktop: left/right flanking, vertically centered on the full height.
         "md:inset-x-auto md:inset-y-0 md:translate-y-0 md:items-center md:justify-start",
         side === "left" ? "md:left-[3.5vw]" : "md:right-[3.5vw]",
       ].join(" ")}
@@ -48,6 +48,7 @@ export default function StoryCircle({ label, side, href, mode }: StoryCircleProp
       <a
         ref={ref}
         href={href}
+        onClick={onClick}
         className="js-circle js-brand-el button"
         data-active={mode === "services" ? "true" : undefined}
       >

@@ -13,6 +13,9 @@ export default function StudioName() {
           "0 0 calc(var(--lit, 0) * 46px) rgb(255 201 124 / calc(var(--lit, 0) * 0.4))",
       }}
     >
+      <p className="mb-2 text-[clamp(0.5rem,1vw,0.65rem)] uppercase tracking-[0.35em] text-lamp opacity-70">
+        Growth Architecture For Modern Businesses
+      </p>
       <h1 className="font-accent text-[clamp(1.8rem,5.5vw,4.4rem)] leading-[1] text-bone">
         <span className="block">Success</span>
         <span className="block text-lamp-bright">Algorithm</span>

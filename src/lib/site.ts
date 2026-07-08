@@ -14,14 +14,14 @@ export const STUDIO = {
 };
 
 // ── Social media links ────────────────────────────────────────────────────────
-// Leave a value as "" to hide that link.
+// Shown as icon buttons in the bottom-right corner.
+// Leave a value as "" to hide that platform's icon.
 
 export const SOCIAL = {
-  instagram: "",
-  linkedin: "",
-  twitter: "",
-  youtube: "",
-  behance: "",
+  instagram: "#",
+  facebook: "#",
+  youtube: "#",
+  linkedin: "#",
 };
 
 // ── Services ──────────────────────────────────────────────────────────────────
@@ -47,178 +47,87 @@ export interface ServiceItem {
 
 export const SERVICES: ServiceItem[] = [
   {
-    id: "brand-engines",
-    name: "Brand Engines",
-    outcome: "Identity systems engineered to make small studios impossible to forget.",
+    id: "social-media",
+    name: "Social Media",
+    outcome: "We architect the content systems that turn feeds into inbound pipelines.",
     caseStudies: [
       {
-        id: "be-noir",
-        title: "Studio Noir Rebrand",
-        client: "Studio Noir",
+        id: "sm-edtech",
+        title: "EdTech Platform — Feed to Pipeline",
+        client: "EdTech Platform, Pune",
         year: "2024",
-        tags: ["Identity", "Motion"],
-        summary: "Complete visual identity overhaul that turned a 2-person studio into a category-of-one.",
+        tags: ["Content Architecture", "LinkedIn"],
+        summary: "Followers 177 → 2,400+ in 6 months, engagement rate 0.8% → 4.1%, entirely from documented content strategy.",
         href: "#",
       },
       {
-        id: "be-flux",
-        title: "Flux Creative Identity",
-        client: "Flux Creative",
+        id: "sm-founder",
+        title: "Founder-Led Authority Build",
+        client: "Solo D2C Founder",
+        year: "2024",
+        tags: ["Personal Brand", "Voice"],
+        summary: "Turned a founder with no following into a recognized voice in their category inside one quarter.",
+        href: "#",
+      },
+      {
+        id: "sm-community",
+        title: "Community-Led Launch",
+        client: "Wellness Studio Chain",
         year: "2023",
-        tags: ["Identity", "Print"],
-        summary: "Brand system built for scale — from business cards to billboard without losing the soul.",
-        href: "#",
-      },
-      {
-        id: "be-alto",
-        title: "Alto Launch Campaign",
-        client: "Alto",
-        year: "2024",
-        tags: ["Brand", "Digital"],
-        summary: "Zero-to-one brand for a new D2C product line, live in 6 weeks.",
+        tags: ["Community", "Cadence"],
+        summary: "Editorial cadence + community management framework replaced ad-hoc posting across 4 locations.",
         href: "#",
       },
     ],
   },
   {
-    id: "interactive-web",
-    name: "Interactive Web",
-    outcome: "WebGL-grade websites that turn idle visitors into believers.",
+    id: "business-consulting",
+    name: "Business Consulting",
+    outcome: "We engineer sales infrastructure that converts effort into predictable revenue.",
     caseStudies: [
       {
-        id: "iw-cascade",
-        title: "Cascade — WebGL Showcase",
-        client: "Cascade Studio",
+        id: "bc-bpo",
+        title: "BPO — Sales Cycle Compression",
+        client: "BPO, Mumbai",
         year: "2024",
-        tags: ["WebGL", "GSAP"],
-        summary: "Full-site 3D experience with particle physics and scroll-driven storytelling.",
+        tags: ["Sales Process", "Coaching"],
+        summary: "Sales cycle 41 days → 26 days, conversion rate 12% → 19% within one quarter of framework deployment.",
         href: "#",
       },
       {
-        id: "iw-mesa",
-        title: "Mesa Portfolio",
-        client: "Mesa Design",
+        id: "bc-saas",
+        title: "SaaS Revenue Architecture Rebuild",
+        client: "B2B SaaS, Bengaluru",
         year: "2023",
-        tags: ["Three.js", "Motion"],
-        summary: "Award-winning portfolio with live shader-based transitions between pages.",
+        tags: ["CRM", "Scripts"],
+        summary: "Documented stage-gated methodology replaced tribal-knowledge selling across an 8-rep team.",
         href: "#",
       },
     ],
   },
   {
-    id: "growth-algorithms",
-    name: "Growth Algorithms",
-    outcome: "Funnels, experiments and automation tuned until the numbers sing.",
+    id: "educational-workshops",
+    name: "Educational Workshops",
+    outcome: "We deliver curriculum-grade programs that transfer skill, not just information.",
     caseStudies: [
       {
-        id: "ga-orbit",
-        title: "Orbit SaaS — 3× MQL Growth",
-        client: "Orbit",
+        id: "ew-mastery",
+        title: "Sales Mastery Cohort",
+        client: "Regional Distribution Firm",
         year: "2024",
-        tags: ["Funnel", "CRO"],
-        summary: "Rebuilt top-of-funnel and A/B tested 14 variants; tripled qualified leads in 90 days.",
+        tags: ["Mastery Program", "Behavioral Transfer"],
+        summary: "Multi-week certification-style program measured by on-the-job behavior change, not attendance.",
         href: "#",
       },
       {
-        id: "ga-volta",
-        title: "Volta Automation Stack",
-        client: "Volta",
+        id: "ew-enterprise",
+        title: "Enterprise Strategy Intensive",
+        client: "Mid-Market Manufacturer",
         year: "2023",
-        tags: ["Automation", "Email"],
-        summary: "Full marketing automation overhaul — 60% less manual ops, 2× email open rates.",
-        href: "#",
-      },
-      {
-        id: "ga-bloom",
-        title: "Bloom — Retention Engine",
-        client: "Bloom",
-        year: "2024",
-        tags: ["Retention", "Analytics"],
-        summary: "Churn prediction model + personalised touchpoints cut monthly churn from 8% to 3%.",
+        tags: ["Enterprise", "Leadership"],
+        summary: "Organization-wide strategy program co-designed with leadership, built backward from a defined outcome.",
         href: "#",
       },
     ],
-  },
-];
-
-// ── Knowledge Repository ──────────────────────────────────────────────────────
-// Shown in the Knowledge Repository drawer (max 8).
-// type:      badge label — PDF / DOC / VID / ZIP / LNK
-// typeColor: hex accent for the badge
-// href:      Google Drive share link (or any URL)
-
-export interface KnowledgeDoc {
-  id: string;
-  type: "PDF" | "DOC" | "VID" | "ZIP" | "LNK";
-  typeColor: string;
-  title: string;
-  desc: string;
-  href: string;
-}
-
-export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
-  {
-    id: "brand",
-    type: "PDF",
-    typeColor: "#9080c8",
-    title: "Brand Guidelines",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod.",
-    href: "#",
-  },
-  {
-    id: "case",
-    type: "PDF",
-    typeColor: "#90b890",
-    title: "Case Study",
-    desc: "Pellentesque habitant morbi tristique senectus et netus malesuada fames.",
-    href: "#",
-  },
-  {
-    id: "reel",
-    type: "VID",
-    typeColor: "#c8a060",
-    title: "Showreel",
-    desc: "Curabitur pretium tincidunt lacus nulla gravida orci a odio nullam varius.",
-    href: "#",
-  },
-  {
-    id: "deck",
-    type: "PDF",
-    typeColor: "#a0b8d0",
-    title: "Capabilities Deck",
-    desc: "Fusce dapibus tellus ac cursus commodo tortor mauris condimentum nibh.",
-    href: "#",
-  },
-  {
-    id: "assets",
-    type: "ZIP",
-    typeColor: "#c87878",
-    title: "Asset Pack",
-    desc: "Etiam porta sem malesuada magna mollis euismod cum sociis natoque penatibus.",
-    href: "#",
-  },
-  {
-    id: "playbook",
-    type: "DOC",
-    typeColor: "#e8b840",
-    title: "Growth Playbook",
-    desc: "Integer posuere erat a ante venenatis dapibus posuere velit aliquet morbi.",
-    href: "#",
-  },
-  {
-    id: "system",
-    type: "PDF",
-    typeColor: "#ffc97c",
-    title: "Design System",
-    desc: "Maecenas sed diam eget risus varius blandit sit amet non magna donec.",
-    href: "#",
-  },
-  {
-    id: "report",
-    type: "PDF",
-    typeColor: "#9080c8",
-    title: "Analytics Report",
-    desc: "Nullam quis risus eget urna mollis ornare vel eu leo vestibulum ligula.",
-    href: "#",
   },
 ];

@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Space_Grotesk, Boldonse } from "next/font/google";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import { StoryProvider } from "@/lib/story-context";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -38,7 +41,13 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${grotesk.variable} ${boldonse.variable} h-full antialiased`}
     >
-      <body className="h-full">{children}</body>
+      <body className="h-full">
+        <StoryProvider>
+          <Nav />
+          {children}
+          <Footer />
+        </StoryProvider>
+      </body>
     </html>
   );
 }

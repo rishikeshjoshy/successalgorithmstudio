@@ -6,11 +6,12 @@ import StudioName from "@/components/StudioName";
 import HeroButton from "@/components/HeroButton";
 import StoryCircle from "@/components/StoryCircle";
 import ServiceCards from "@/components/ServiceCards";
-import BottomTray from "@/components/BottomTray";
+import SocialLinks from "@/components/SocialLinks";
 
 import { useLampControls } from "@/hooks/useLampControls";
 import { useHeroTimelines } from "@/hooks/useHeroTimelines";
 import { createLampSceneState } from "@/lib/lamp-state";
+import { useStory } from "@/lib/story-context";
 import type { HeroMode } from "@/lib/constants";
 
 /**
@@ -21,6 +22,7 @@ export default function LampHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<HeroMode>("brand");
   const lampState = useMemo(() => createLampSceneState(), []);
+  const { openStory } = useStory();
 
   useLampControls(containerRef, lampState);
   const { applyMode } = useHeroTimelines({ scopeRef: containerRef, lampState });
@@ -42,7 +44,26 @@ export default function LampHero() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  const knowledgeRef = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    const el = knowledgeRef.current;
+    if (!el) return;
+    const on = () => el.classList.add("button--pressed");
+    const off = () => el.classList.remove("button--pressed");
+    el.addEventListener("pointerdown", on);
+    el.addEventListener("pointerup", off);
+    el.addEventListener("pointercancel", off);
+    el.addEventListener("pointerleave", off);
+    return () => {
+      el.removeEventListener("pointerdown", on);
+      el.removeEventListener("pointerup", off);
+      el.removeEventListener("pointercancel", off);
+      el.removeEventListener("pointerleave", off);
+    };
+  }, []);
+
   const brandHidden = mode === "services";
+  const handleToggle = () => setMode((m) => (m === "brand" ? "services" : "brand"));
 
   return (
     <main
@@ -68,20 +89,36 @@ export default function LampHero() {
         </div>
 
         <div inert={brandHidden} className={brandHidden ? "pointer-events-none" : undefined}>
-          <StoryCircle side="left" label="Our Story" hint="where we came from" href="#our-story" mode={mode} />
-          <StoryCircle side="right" label="Your Story" hint="where you're going" href="#your-story" mode={mode} />
+          <StoryCircle
+            side="left"
+            label="Our Story"
+            href="#our-story"
+            mode={mode}
+            onClick={(event) => {
+              event.preventDefault();
+              openStory();
+            }}
+          />
+          <StoryCircle side="right" label="Your Story" href="/your-story" mode={mode} />
         </div>
 
         <ServiceCards active={mode === "services"} />
 
-        <div className="absolute inset-x-0 top-[72%] flex justify-center md:top-[66%]">
-          <HeroButton
-            mode={mode}
-            onToggle={() => setMode((m) => (m === "brand" ? "services" : "brand"))}
-          />
+        <div className="absolute inset-x-0 bottom-20 flex justify-center md:bottom-24">
+          <HeroButton mode={mode} onToggle={handleToggle} />
         </div>
 
-        <BottomTray />
+        <div className="absolute inset-x-0 bottom-0 flex justify-center">
+          <a ref={knowledgeRef} href="/knowledge" className="button button--compact">
+            <div>
+              <div>
+                <div className="uppercase tracking-[0.1em]">Knowledge Repository</div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <SocialLinks />
       </div>
     </main>
   );

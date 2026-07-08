@@ -1474,6 +1474,12 @@ body {
 
 /* ─── Knowledge Repository (/knowledge, 6 tabs) — reuses the existing
        .tray-card tab-header styling (defined but unused elsewhere). ─── */
+.pillar-page.knowledge-page {
+  /* Wider than the shared 860px reading column: six tabs need the room,
+     and the longer labels ("University", "Spirituality") were clipping. */
+  max-width: 1040px;
+}
+
 .knowledge-tabs {
   display: flex;
   gap: 0.5rem;
@@ -1488,7 +1494,7 @@ body {
 
 .knowledge-tabs .tray-card {
   flex: 0 0 auto;
-  width: 115px;
+  width: 150px;
 }
 
 @media (min-width: 768px) {
@@ -1498,6 +1504,7 @@ body {
   .knowledge-tabs .tray-card {
     flex: 1;
     width: auto;
+    max-width: none;
   }
 }
 

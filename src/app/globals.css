@@ -1042,6 +1042,68 @@ body {
   color: var(--color-lamp);
 }
 
+/* ─── Boot splash — brass wordmark assembles, then the panel fades to
+       reveal the lamp hero. z-index above .our-story-overlay (60) since it
+       must cover Nav + everything else on first paint. ─── */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8vw;
+  background: var(--color-ink);
+}
+
+.splash__mark-wrap {
+  position: relative;
+}
+
+.splash__mark {
+  display: block;
+  width: clamp(260px, 65vw, 480px);
+  height: auto;
+  overflow: visible;
+}
+
+.splash__mark path {
+  /* Opacity-only: these paths carry their own translate/scale as an SVG
+     attribute per letter (wildly different scales between the big wordmark
+     and the small subtitle line) — animating a uniform CSS transform on top
+     fights that per-path attribute and reads as a broken diagonal cascade.
+     Position motion is tweened on the per-letter <g> wrappers instead. */
+  opacity: 0;
+}
+
+/* Lamp-warm glint that sweeps the assembled wordmark. The clip wrapper
+   bounds its travel; screen blending keeps it reading as passing light. */
+.splash__sheen-clip {
+  position: absolute;
+  inset: -12% 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.splash__sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 34%;
+  transform: translateX(-160%) skewX(-16deg);
+  background: linear-gradient(
+    100deg,
+    rgb(255 201 124 / 0) 0%,
+    rgb(255 201 124 / 0.1) 30%,
+    rgb(255 240 214 / 0.28) 50%,
+    rgb(255 201 124 / 0.1) 70%,
+    rgb(255 201 124 / 0) 100%
+  );
+  filter: blur(7px);
+  mix-blend-mode: screen;
+}
+
 /* ─── Our Story panel — same wipe technique as .case-overlay, but fixed
        (not scoped to the hero's own <main>) since Nav is global. ─── */
 .our-story-overlay {
@@ -1604,56 +1666,6 @@ body {
   color: var(--color-bone-dim);
   opacity: 0.7;
   text-align: center;
-}
-
-/* ─── Home mid-section (Service Pillar Preview) ─── */
-.pillar-preview {
-  padding-top: 5rem;
-  gap: 2rem;
-}
-
-.pillar-preview__heading {
-  margin-bottom: 1rem;
-}
-
-.pillar-preview__table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-
-.pillar-preview__table th {
-  text-align: left;
-  font-family: var(--font-accent);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-lamp);
-  opacity: 0.7;
-  padding: 0.6rem 1rem 0.6rem 0;
-  border-bottom: 1px solid rgb(255 201 124 / 0.15);
-}
-
-.pillar-preview__table td {
-  padding: 1rem 1rem 1rem 0;
-  border-bottom: 1px solid rgb(255 201 124 / 0.08);
-  color: var(--color-bone-dim);
-  line-height: 1.5;
-  vertical-align: top;
-}
-
-.pillar-preview__table td:first-child {
-  color: var(--color-bone);
-  font-family: var(--font-accent);
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-
-@media (max-width: 640px) {
-  .pillar-preview__table {
-    display: block;
-    overflow-x: auto;
-  }
 }
 
 /* ─── Global footer ─── */

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Space_Grotesk, Boldonse } from "next/font/google";
 import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
+import SplashScreen from "@/components/SplashScreen";
 import { StoryProvider } from "@/lib/story-context";
 import "./globals.css";
 
@@ -42,10 +42,10 @@ export default function RootLayout({
       className={`${fraunces.variable} ${grotesk.variable} ${boldonse.variable} h-full antialiased`}
     >
       <body className="h-full">
+        <SplashScreen />
         <StoryProvider>
           <Nav />
           {children}
-          <Footer />
         </StoryProvider>
       </body>
     </html>

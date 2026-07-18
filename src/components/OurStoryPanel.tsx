@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { useEffect } from "react";
 
 interface OurStoryPanelProps {
   open: boolean;
@@ -11,7 +10,9 @@ interface OurStoryPanelProps {
 /**
  * "Our Story" side sheet: slides in from the left and takes the left third
  * of the viewport (up to the lamp), leaving the rest of the page intact and
- * interactive. Full-width on mobile.
+ * interactive. Full-width on mobile. The slide is a pure CSS transition
+ * driven by the --open class, so it works even where rAF-based animation
+ * (GSAP) is throttled — embedded previews, background tabs.
  *
  * Section C (founder story) is intentionally omitted — the source copy doc
  * marks it a bracketed placeholder with no real founder narrative yet ("do
@@ -20,23 +21,6 @@ interface OurStoryPanelProps {
  * team-only in the source doc.
  */
 export default function OurStoryPanel({ open, onClose }: OurStoryPanelProps) {
-  const drawerRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const drawer = drawerRef.current;
-    const content = contentRef.current;
-    if (!drawer || !content) return;
-
-    if (open) {
-      gsap.to(drawer, { xPercent: 0, duration: 0.55, ease: "expo.out", overwrite: true });
-      gsap.set(content, { opacity: 0, y: 24 });
-      gsap.to(content, { opacity: 1, y: 0, duration: 0.4, delay: 0.2, ease: "power3.out" });
-    } else {
-      gsap.to(drawer, { xPercent: -100, duration: 0.4, ease: "power3.in", overwrite: true });
-    }
-  }, [open]);
-
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -48,13 +32,11 @@ export default function OurStoryPanel({ open, onClose }: OurStoryPanelProps) {
 
   return (
     <aside
-      ref={drawerRef}
-      className="story-drawer story-drawer--left"
-      style={{ transform: "translateX(-100%)" } as React.CSSProperties}
+      className={"story-drawer story-drawer--left" + (open ? " story-drawer--open" : "")}
       inert={!open}
       aria-label="Our Story"
     >
-      <div ref={contentRef} className="story-drawer__content">
+      <div className="story-drawer__content">
         <button onClick={onClose} className="case-drawer__close" aria-label="Close">
           ✕ Close
         </button>

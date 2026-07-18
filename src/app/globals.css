@@ -1171,17 +1171,45 @@ body {
 .story-drawer--left {
   left: 0;
   border-right: 1px solid rgb(255 201 124 / 0.15);
+  transform: translateX(-100%);
 }
 
 .story-drawer--right {
   right: 0;
   border-left: 1px solid rgb(255 201 124 / 0.15);
+  transform: translateX(100%);
+}
+
+/* CSS transition, not a JS ticker: the slide must still play (or at worst
+   land on its end state) in throttled/background tabs where rAF stalls. */
+.story-drawer {
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.story-drawer--open {
+  transform: translateX(0);
 }
 
 .story-drawer__content {
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.story-drawer--open .story-drawer__content {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-drawer,
+  .story-drawer__content {
+    transition: none;
+  }
 }
 
 /* The quiz inside the right drawer: page-scale type stepped down to fit a

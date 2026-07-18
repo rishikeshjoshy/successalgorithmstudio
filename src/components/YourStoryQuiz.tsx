@@ -10,8 +10,11 @@ type Step = "intro" | number | "result";
 /**
  * Client-only multi-step quiz, no backend/persistence. Result is picked by
  * Q4 ("bottleneck") alone — see src/lib/your-story.ts for why.
+ *
+ * Renders as a full page on /your-story, or compact inside the right-hand
+ * story drawer when `inPanel` is set.
  */
-export default function YourStoryQuiz() {
+export default function YourStoryQuiz({ inPanel = false }: { inPanel?: boolean }) {
   const [step, setStep] = useState<Step>("intro");
   const [answers, setAnswers] = useState<(number | null)[]>(
     Array(QUESTIONS.length).fill(null)
@@ -36,8 +39,10 @@ export default function YourStoryQuiz() {
     else if (step === "result") setStep(QUESTIONS.length - 1);
   };
 
+  const Wrapper = inPanel ? "div" : "main";
+
   return (
-    <main className="pillar-page quiz-page">
+    <Wrapper className={inPanel ? "quiz-page quiz-page--panel" : "pillar-page quiz-page"}>
       {step === "intro" && (
         <section className="pillar-hero">
           <p className="pillar-hero__eyebrow">Your Story</p>
@@ -104,6 +109,6 @@ export default function YourStoryQuiz() {
             </section>
           );
         })()}
-    </main>
+    </Wrapper>
   );
 }

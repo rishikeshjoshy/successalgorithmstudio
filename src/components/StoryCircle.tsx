@@ -5,13 +5,17 @@ import type { HeroMode } from "@/lib/constants";
 
 interface StoryCircleProps {
   label: string;
-  side: "left" | "right";
   href: string;
   mode?: HeroMode;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-export default function StoryCircle({ label, side, href, mode, onClick }: StoryCircleProps) {
+/**
+ * A neobrutalist story pill (Our Story / Your Story). Pure button — layout
+ * belongs to the hero's bottom cluster, which lines these up with the
+ * services toggle.
+ */
+export default function StoryCircle({ label, href, mode, onClick }: StoryCircleProps) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -32,32 +36,18 @@ export default function StoryCircle({ label, side, href, mode, onClick }: StoryC
   }, []);
 
   return (
-    <div
-      className={[
-        "absolute z-20 flex",
-        // Mobile: stacked in the gap below the studio name, centered horizontally.
-        // "Our Story" (left) sits above "Your Story" (right) — same left-to-right
-        // reading order as the desktop flanking layout.
-        "inset-x-0 -translate-y-1/2 justify-center",
-        side === "left" ? "top-[58%]" : "top-[66%]",
-        // Desktop: left/right flanking, vertically centered on the full height.
-        "md:inset-x-auto md:inset-y-0 md:translate-y-0 md:items-center md:justify-start",
-        side === "left" ? "md:left-[3.5vw]" : "md:right-[3.5vw]",
-      ].join(" ")}
+    <a
+      ref={ref}
+      href={href}
+      onClick={onClick}
+      className="js-circle js-brand-el button"
+      data-active={mode === "services" ? "true" : undefined}
     >
-      <a
-        ref={ref}
-        href={href}
-        onClick={onClick}
-        className="js-circle js-brand-el button"
-        data-active={mode === "services" ? "true" : undefined}
-      >
+      <div>
         <div>
-          <div>
-            <div className="uppercase tracking-[0.12em]">{label}</div>
-          </div>
+          <div className="uppercase tracking-[0.12em]">{label}</div>
         </div>
-      </a>
-    </div>
+      </div>
+    </a>
   );
 }

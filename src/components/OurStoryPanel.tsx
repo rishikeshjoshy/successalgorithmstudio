@@ -9,9 +9,9 @@ interface OurStoryPanelProps {
 }
 
 /**
- * "Our Story" slide-out panel, opened from Nav on any route. Reuses the same
- * clip-path wipe technique as the hero's case-study overlay, but positioned
- * fixed (not absolute) since it isn't scoped inside the hero's own <main>.
+ * "Our Story" side sheet: slides in from the left and takes the left third
+ * of the viewport (up to the lamp), leaving the rest of the page intact and
+ * interactive. Full-width on mobile.
  *
  * Section C (founder story) is intentionally omitted — the source copy doc
  * marks it a bracketed placeholder with no real founder narrative yet ("do
@@ -20,24 +20,20 @@ interface OurStoryPanelProps {
  * team-only in the source doc.
  */
 export default function OurStoryPanel({ open, onClose }: OurStoryPanelProps) {
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const overlay = overlayRef.current;
+    const drawer = drawerRef.current;
     const content = contentRef.current;
-    if (!overlay || !content) return;
+    if (!drawer || !content) return;
 
     if (open) {
-      gsap.fromTo(
-        overlay,
-        { clipPath: "inset(100% 0 0 0)" },
-        { clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "expo.out", overwrite: true }
-      );
-      gsap.set(content, { opacity: 0, y: 28 });
-      gsap.to(content, { opacity: 1, y: 0, duration: 0.45, delay: 0.25, ease: "power3.out" });
+      gsap.to(drawer, { xPercent: 0, duration: 0.55, ease: "expo.out", overwrite: true });
+      gsap.set(content, { opacity: 0, y: 24 });
+      gsap.to(content, { opacity: 1, y: 0, duration: 0.4, delay: 0.2, ease: "power3.out" });
     } else {
-      gsap.to(overlay, { clipPath: "inset(100% 0 0 0)", duration: 0.38, ease: "power3.in", overwrite: true });
+      gsap.to(drawer, { xPercent: -100, duration: 0.4, ease: "power3.in", overwrite: true });
     }
   }, [open]);
 
@@ -51,13 +47,14 @@ export default function OurStoryPanel({ open, onClose }: OurStoryPanelProps) {
   }, [open, onClose]);
 
   return (
-    <div
-      ref={overlayRef}
-      className="our-story-overlay"
-      style={{ clipPath: "inset(100% 0 0 0)" } as React.CSSProperties}
+    <aside
+      ref={drawerRef}
+      className="story-drawer story-drawer--left"
+      style={{ transform: "translateX(-100%)" } as React.CSSProperties}
       inert={!open}
+      aria-label="Our Story"
     >
-      <div ref={contentRef} className="case-drawer">
+      <div ref={contentRef} className="story-drawer__content">
         <button onClick={onClose} className="case-drawer__close" aria-label="Close">
           ✕ Close
         </button>
@@ -91,6 +88,6 @@ export default function OurStoryPanel({ open, onClose }: OurStoryPanelProps) {
           is not a services company. It&rsquo;s an institution being built in public.
         </p>
       </div>
-    </div>
+    </aside>
   );
 }

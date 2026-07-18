@@ -289,7 +289,7 @@ export default function LampScene({ state }: LampSceneProps) {
       head.rotation.x = BASE_TILT_X + state.aimY * AIM.maxRotX + state.idleSwayX;
       // Positive Z rotation tips the down-firing beam toward -X, so follow
       // the pointer by rotating with aimX directly.
-      head.rotation.z = state.aimX * AIM.maxRotZ + state.idleSwayZ;
+      head.rotation.z = state.aimX * AIM.maxRotZ + state.idleSwayZ + state.swingZ;
 
       const power = state.glow * state.intensityScale;
       spot.intensity = SPOT.intensity * power;

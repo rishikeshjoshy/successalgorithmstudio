@@ -26,7 +26,7 @@ export const SOCIAL = {
 
 // ── Services ──────────────────────────────────────────────────────────────────
 // Shown on the "Explore Our Services" cards (max 3).
-// Hover a card to open its case study drawer.
+// Click a card to open its case study drawer.
 
 export interface CaseStudy {
   id: string;

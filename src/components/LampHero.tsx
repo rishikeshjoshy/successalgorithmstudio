@@ -22,7 +22,7 @@ export default function LampHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<HeroMode>("brand");
   const lampState = useMemo(() => createLampSceneState(), []);
-  const { openStory } = useStory();
+  const { openStory, openYourStory } = useStory();
 
   useLampControls(containerRef, lampState);
   const { applyMode } = useHeroTimelines({ scopeRef: containerRef, lampState });
@@ -88,24 +88,38 @@ export default function LampHero() {
           </div>
         </div>
 
-        <div inert={brandHidden} className={brandHidden ? "pointer-events-none" : undefined}>
-          <StoryCircle
-            side="left"
-            label="Our Story"
-            href="#our-story"
-            mode={mode}
-            onClick={(event) => {
-              event.preventDefault();
-              openStory();
-            }}
-          />
-          <StoryCircle side="right" label="Your Story" href="/your-story" mode={mode} />
-        </div>
-
         <ServiceCards active={mode === "services"} />
 
-        <div className="absolute inset-x-0 bottom-20 flex justify-center md:bottom-24">
-          <HeroButton mode={mode} onToggle={handleToggle} />
+        {/* Bottom cluster: story pills share one line with the services
+            toggle on desktop, stack under it on mobile. The pills fade out
+            in services mode (js-brand-el) but keep their layout slot, so
+            the toggle never shifts. */}
+        <div className="absolute inset-x-0 bottom-14 flex flex-col items-center gap-3 md:bottom-24 md:flex-row md:justify-center md:gap-8">
+          <div className="order-2 md:order-1" inert={brandHidden}>
+            <StoryCircle
+              label="Our Story"
+              href="#our-story"
+              mode={mode}
+              onClick={(event) => {
+                event.preventDefault();
+                openStory();
+              }}
+            />
+          </div>
+          <div className="order-1 md:order-2">
+            <HeroButton mode={mode} onToggle={handleToggle} />
+          </div>
+          <div className="order-3" inert={brandHidden}>
+            <StoryCircle
+              label="Your Story"
+              href="/your-story"
+              mode={mode}
+              onClick={(event) => {
+                event.preventDefault();
+                openYourStory();
+              }}
+            />
+          </div>
         </div>
 
         <div className="absolute inset-x-0 bottom-0 flex justify-center">

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Space_Grotesk, Boldonse } from "next/font/google";
 import Nav from "@/components/Nav";
+import ClickSfx from "@/components/ClickSfx";
 import SplashScreen from "@/components/SplashScreen";
 import { StoryProvider } from "@/lib/story-context";
 import "./globals.css";
@@ -43,6 +44,7 @@ export default function RootLayout({
     >
       <body className="h-full">
         <SplashScreen />
+        <ClickSfx />
         <StoryProvider>
           <Nav />
           {children}

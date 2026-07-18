@@ -66,6 +66,28 @@ export function useHeroTimelines({ scopeRef, lampState }: UseHeroTimelinesArgs) 
               .from(".js-dock", { y: 34, autoAlpha: 0, duration: 0.7 }, "-=0.55");
           }
 
+          // --- load-in: one damped pendulum swing before the idle breathing ---
+          if (!reduce) {
+            const swing = { t: 0 };
+            gsap.to(swing, {
+              t: 1,
+              duration: 5,
+              delay: 1.6,
+              ease: "none",
+              onUpdate() {
+                // Classic damped oscillator: e^-λs envelope on a sine. By s=5
+                // the envelope is ~1% of the 0.22 rad start, so the idle sway
+                // (0.017 rad) takes over without a visible seam.
+                const s = swing.t * 5;
+                lampState.swingZ =
+                  0.22 * Math.exp(-s * 0.85) * Math.sin(s * Math.PI * 2 * 0.65);
+              },
+              onComplete() {
+                lampState.swingZ = 0;
+              },
+            });
+          }
+
           // --- idle: lamp breathing + button pulse ---
           if (!reduce) {
             gsap.to(lampState, {

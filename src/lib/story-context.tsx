@@ -3,10 +3,12 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import OurStoryPanel from "@/components/OurStoryPanel";
 import YourStoryPanel from "@/components/YourStoryPanel";
+import KnowledgePanel from "@/components/KnowledgePanel";
 
 interface StoryContextValue {
   openStory: () => void;
   openYourStory: () => void;
+  openKnowledge: () => void;
 }
 
 const StoryContext = createContext<StoryContextValue | null>(null);
@@ -20,17 +22,20 @@ const StoryContext = createContext<StoryContextValue | null>(null);
 export function StoryProvider({ children }: { children: ReactNode }) {
   const [storyOpen, setStoryOpen] = useState(false);
   const [yourStoryOpen, setYourStoryOpen] = useState(false);
+  const [knowledgeOpen, setKnowledgeOpen] = useState(false);
 
   return (
     <StoryContext.Provider
       value={{
         openStory: () => setStoryOpen(true),
         openYourStory: () => setYourStoryOpen(true),
+        openKnowledge: () => setKnowledgeOpen(true),
       }}
     >
       {children}
       <OurStoryPanel open={storyOpen} onClose={() => setStoryOpen(false)} />
       <YourStoryPanel open={yourStoryOpen} onClose={() => setYourStoryOpen(false)} />
+      <KnowledgePanel open={knowledgeOpen} onClose={() => setKnowledgeOpen(false)} />
     </StoryContext.Provider>
   );
 }

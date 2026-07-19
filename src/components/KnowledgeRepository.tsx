@@ -12,11 +12,20 @@ import {
   type KnowledgeTabId,
 } from "@/lib/knowledge";
 
-export default function KnowledgeRepository() {
+/**
+ * Renders as a full page on /knowledge, or compact inside the bottom
+ * knowledge sheet on the home hero when `inPanel` is set.
+ */
+export default function KnowledgeRepository({ inPanel = false }: { inPanel?: boolean }) {
   const [activeTab, setActiveTab] = useState<KnowledgeTabId>("case-studies");
+  const Wrapper = inPanel ? "div" : "main";
 
   return (
-    <main className="pillar-page knowledge-page">
+    <Wrapper
+      className={
+        inPanel ? "knowledge-page knowledge-page--panel" : "pillar-page knowledge-page"
+      }
+    >
       <section className="pillar-hero">
         <h1 className="pillar-hero__title">The Knowledge Repository</h1>
         <p className="pillar-hero__subhead">
@@ -125,6 +134,6 @@ export default function KnowledgeRepository() {
           </div>
         )}
       </div>
-    </main>
+    </Wrapper>
   );
 }

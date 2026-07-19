@@ -1212,6 +1212,77 @@ body {
   }
 }
 
+/* ─── Knowledge sheet — rises from the bottom edge to just below the lamp,
+       covering the studio name and buttons while the lamp stays lit above.
+       Same CSS-transition mechanism as the story drawers. ─── */
+.knowledge-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 23vh;
+  z-index: 60;
+  background-color: #0b0805;
+  border-top: 1px solid rgb(255 201 124 / 0.15);
+  border-radius: 18px 18px 0 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1.5rem 5vw 2.5rem;
+  transform: translateY(110%);
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 767px) {
+  .knowledge-sheet {
+    top: 28vh; /* the lamp hangs lower in portrait (higher apex %) */
+  }
+}
+
+.knowledge-sheet--open {
+  transform: translateY(0);
+}
+
+.knowledge-sheet__content {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.knowledge-sheet--open .knowledge-sheet__content {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.15s;
+}
+
+/* Compact layout for the repository inside the sheet: page-scale hero
+   padding and type stepped down. */
+.knowledge-page--panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.knowledge-sheet .pillar-hero__title {
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  margin-bottom: 0.6rem;
+}
+
+.knowledge-sheet .pillar-hero__subhead {
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .knowledge-sheet,
+  .knowledge-sheet__content {
+    transition: none;
+  }
+}
+
 /* The quiz inside the right drawer: page-scale type stepped down to fit a
    third-width column. */
 .quiz-page--panel {

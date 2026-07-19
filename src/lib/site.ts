@@ -19,7 +19,6 @@ export const STUDIO = {
 
 export const SOCIAL = {
   instagram: "#",
-  facebook: "#",
   youtube: "#",
   linkedin: "#",
 };

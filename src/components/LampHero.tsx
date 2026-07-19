@@ -22,7 +22,7 @@ export default function LampHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<HeroMode>("brand");
   const lampState = useMemo(() => createLampSceneState(), []);
-  const { openStory, openYourStory } = useStory();
+  const { openStory, openYourStory, openKnowledge } = useStory();
 
   useLampControls(containerRef, lampState);
   const { applyMode } = useHeroTimelines({ scopeRef: containerRef, lampState });
@@ -123,7 +123,15 @@ export default function LampHero() {
         </div>
 
         <div className="absolute inset-x-0 bottom-0 flex justify-center">
-          <a ref={knowledgeRef} href="/knowledge" className="button button--compact">
+          <a
+            ref={knowledgeRef}
+            href="/knowledge"
+            className="button button--compact"
+            onClick={(event) => {
+              event.preventDefault();
+              openKnowledge();
+            }}
+          >
             <div>
               <div>
                 <div className="uppercase tracking-[0.1em]">Knowledge Repository</div>
